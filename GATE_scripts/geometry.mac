@@ -40,7 +40,7 @@
 #=====================================================
 # MATERIAL DATABASE
 #=====================================================
-/gate/geometry/setMaterialDatabase ../../GATE_scripts/Materials.xml
+/gate/geometry/setMaterialDatabase GateMaterials.db
 
 #=====================================================
 # WORLD
