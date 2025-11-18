@@ -1,0 +1,67 @@
+#=====================================================
+# PHYSICS LIST - SPECT Imaging
+#=====================================================
+# Standard electromagnetic physics for SPECT (140 keV gamma imaging)
+# Includes photoelectric effect, Compton scattering, and Rayleigh scattering
+
+#=====================================================
+# PHYSICS LIST
+#=====================================================
+/gate/physics/addPhysicsList emstandard_opt4
+
+#=====================================================
+# ELECTROMAGNETIC PROCESSES
+#=====================================================
+# Photoelectric effect
+/gate/physics/processes/PhotoElectric/setModel StandardModel
+
+# Compton scattering
+/gate/physics/processes/Compton/setModel StandardModel
+
+# Rayleigh scattering
+/gate/physics/processes/RayleighScattering/setModel PenelopeModel
+
+# Electron ionization
+/gate/physics/processes/ElectronIonisation/setModel StandardModel e-
+/gate/physics/processes/ElectronIonisation/setModel StandardModel e+
+
+# Bremsstrahlung
+/gate/physics/processes/Bremsstrahlung/setModel StandardModel e-
+/gate/physics/processes/Bremsstrahlung/setModel StandardModel e+
+
+# Positron annihilation
+/gate/physics/processes/PositronAnnihilation/setModel StandardModel
+
+#=====================================================
+# PRODUCTION CUTS
+#=====================================================
+# Set production cuts for secondary particles
+/gate/physics/setEMin 0.1 keV
+/gate/physics/setEMax 10 MeV
+/gate/physics/setDEDXBinning 220
+/gate/physics/setLambdaBinning 220
+
+# Global cuts
+/gate/physics/Gamma/SetCutInRegion world 1 mm
+/gate/physics/Electron/SetCutInRegion world 1 mm
+/gate/physics/Positron/SetCutInRegion world 1 mm
+
+# Detector cuts (lower for better accuracy)
+/gate/physics/Gamma/SetCutInRegion crystal 0.1 mm
+/gate/physics/Electron/SetCutInRegion crystal 0.1 mm
+/gate/physics/Positron/SetCutInRegion crystal 0.1 mm
+
+#=====================================================
+# SCINTILLATION
+#=====================================================
+# Enable optical photon generation (for GAGG scintillation)
+/gate/physics/addProcess OpticalAbsorption
+/gate/physics/addProcess OpticalRayleigh
+/gate/physics/addProcess OpticalBoundary
+/gate/physics/addProcess OpticalMie
+/gate/physics/addProcess OpticalWLS
+
+# Scintillation
+/gate/physics/addProcess Scintillation
+/gate/physics/processes/Scintillation/setScintillationYieldFactor 1.0
+/gate/physics/processes/Scintillation/setTrackSecondariesFirst true

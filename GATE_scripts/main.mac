@@ -1,0 +1,54 @@
+#=====================================================
+# GAGG SPECT Pinhole Simulation - Main Macro
+#=====================================================
+# This simulation uses a pinhole collimator design for SPECT imaging
+# with 3 point sources and GAGG scintillator detectors
+# FOV diameter: 80 cm
+# Detector: 3mm x 3mm GAGG crystals with 0.1mm spacing
+
+#=====================================================
+# VERBOSE AND VISUALIZATION
+#=====================================================
+/control/execute verbose.mac
+#/control/execute visu.mac
+
+#=====================================================
+# GEOMETRY
+#=====================================================
+/control/execute geometry.mac
+
+#=====================================================
+# PHYSICS
+#=====================================================
+/control/execute physics.mac
+
+#=====================================================
+# DIGITIZER
+#=====================================================
+/control/execute digitizer.mac
+
+#=====================================================
+# SOURCE
+#=====================================================
+/control/execute source.mac
+
+#=====================================================
+# INITIALIZATION
+#=====================================================
+/gate/run/initialize
+
+#=====================================================
+# DATA OUTPUT
+#=====================================================
+/control/execute output.mac
+
+#=====================================================
+# START ACQUISITION
+#=====================================================
+# Set the time parameters
+/gate/application/setTimeSlice 1 s
+/gate/application/setTimeStart 0 s
+/gate/application/setTimeStop 1 s
+
+# Start acquisition
+/gate/application/startDAQ

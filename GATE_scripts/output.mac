@@ -1,0 +1,50 @@
+#=====================================================
+# OUTPUT CONFIGURATION
+#=====================================================
+# Data output for SPECT simulation
+# Saves ROOT files with singles, hits, and projection data
+
+#=====================================================
+# ROOT OUTPUT
+#=====================================================
+/gate/output/root/enable
+/gate/output/root/setFileName ../output/GAGG_SPECT
+/gate/output/root/setRootHitFlag 1
+/gate/output/root/setRootSinglesFlag 1
+/gate/output/root/setRootNtupleFlag 0
+
+#=====================================================
+# PROJECTION OUTPUT (SPECT-specific)
+#=====================================================
+# Create projection data for SPECT reconstruction
+/gate/output/projection/enable
+/gate/output/projection/setFileName ../output/GAGG_SPECT_projection
+/gate/output/projection/pixelSizeX 3.1 mm
+/gate/output/projection/pixelSizeY 3.1 mm
+/gate/output/projection/pixelNumberX 160
+/gate/output/projection/pixelNumberY 160
+
+# Projection plane depth
+/gate/output/projection/projectionPlane YZ
+
+#=====================================================
+# ANALYSIS OUTPUT (optional)
+#=====================================================
+# ASCII output for quick inspection
+# Commented out by default - large files
+#/gate/output/ascii/enable
+#/gate/output/ascii/setFileName ../output/GAGG_SPECT_ascii
+#/gate/output/ascii/setOutFileHitsFlag 1
+#/gate/output/ascii/setOutFileSinglesFlag 1
+
+#=====================================================
+# NOTES
+#=====================================================
+# Output files will be saved in ../output/ directory:
+# - GAGG_SPECT.root: ROOT file with hits and singles
+# - GAGG_SPECT_projection.hdr/.sin: Interfile format projections
+#
+# Projection parameters match detector geometry:
+# - 160x160 crystals
+# - 3.1mm pixel size (3mm crystal + 0.1mm gap)
+# - Total detector size: ~50cm x 50cm

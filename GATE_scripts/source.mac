@@ -1,0 +1,57 @@
+#=====================================================
+# SOURCE CONFIGURATION - 3 Point Sources
+#=====================================================
+# Three Tc-99m point sources positioned within 80cm FOV
+# Tc-99m emits 140.5 keV gamma rays (primary SPECT isotope)
+# Sources positioned in triangular pattern for testing
+
+#=====================================================
+# SOURCE 1 - Center
+#=====================================================
+/gate/source/addSource source1
+/gate/source/source1/gps/particle gamma
+/gate/source/source1/gps/energytype Mono
+/gate/source/source1/gps/monoenergy 140.5 keV
+/gate/source/source1/setActivity 1 MBq
+/gate/source/source1/gps/angtype iso
+/gate/source/source1/gps/type Point
+/gate/source/source1/gps/centre 0 0 0 cm
+/gate/source/source1/gps/confine NULL
+
+#=====================================================
+# SOURCE 2 - Offset position 1
+#=====================================================
+/gate/source/addSource source2
+/gate/source/source2/gps/particle gamma
+/gate/source/source2/gps/energytype Mono
+/gate/source/source2/gps/monoenergy 140.5 keV
+/gate/source/source2/setActivity 1 MBq
+/gate/source/source2/gps/angtype iso
+/gate/source/source2/gps/type Point
+/gate/source/source2/gps/centre 10 0 10 cm
+/gate/source/source2/gps/confine NULL
+
+#=====================================================
+# SOURCE 3 - Offset position 2
+#=====================================================
+/gate/source/addSource source3
+/gate/source/source3/gps/particle gamma
+/gate/source/source3/gps/energytype Mono
+/gate/source/source3/gps/monoenergy 140.5 keV
+/gate/source/source3/setActivity 1 MBq
+/gate/source/source3/gps/angtype iso
+/gate/source/source3/gps/type Point
+/gate/source/source3/gps/centre -10 0 -10 cm
+/gate/source/source3/gps/confine NULL
+
+#=====================================================
+# NOTES
+#=====================================================
+# - All sources use Tc-99m characteristic 140.5 keV gamma emission
+# - Isotropic emission (angtype iso)
+# - Equal activity (1 MBq each)
+# - Sources positioned within 80cm FOV diameter:
+#   * Source 1: Origin (0, 0, 0)
+#   * Source 2: (10, 0, 10) cm - diagonal offset
+#   * Source 3: (-10, 0, -10) cm - opposite diagonal
+# - All positions well within 40cm radius (80cm diameter FOV)

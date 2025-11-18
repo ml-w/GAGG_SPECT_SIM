@@ -1,0 +1,59 @@
+#=====================================================
+# DIGITIZER CHAIN - SPECT
+#=====================================================
+# Digitizer modules for realistic SPECT detector response
+# Includes energy blurring, spatial blurring, and energy windows
+
+#=====================================================
+# ADDER
+#=====================================================
+# Sum all energy depositions in a crystal during one event
+/gate/digitizer/Singles/insert adder
+
+#=====================================================
+# ENERGY BLURRING
+#=====================================================
+# Energy resolution blurring (GAGG typical: ~6-8% at 662 keV)
+# Using 7% at 140.5 keV for Tc-99m
+/gate/digitizer/Singles/insert blurring
+/gate/digitizer/Singles/blurring/setResolution 0.07
+/gate/digitizer/Singles/blurring/setEnergyOfReference 140.5 keV
+
+#=====================================================
+# SPATIAL BLURRING (optional)
+#=====================================================
+# Intrinsic spatial resolution
+# Commented out by default - uncomment if needed
+#/gate/digitizer/Singles/insert spblurring
+#/gate/digitizer/Singles/spblurring/setSpresolution 3 mm
+#/gate/digitizer/Singles/spblurring/verbose 0
+
+#=====================================================
+# ENERGY WINDOW
+#=====================================================
+# Main photopeak window for Tc-99m (140.5 keV)
+# Typical SPECT: 20% window centered at photopeak
+# Lower level: 126.5 keV (140.5 - 10%)
+# Upper level: 154.5 keV (140.5 + 10%)
+/gate/digitizer/Singles/insert thresholder
+/gate/digitizer/Singles/thresholder/setThreshold 126.5 keV
+/gate/digitizer/Singles/insert upholder
+/gate/digitizer/Singles/upholder/setUphold 154.5 keV
+
+#=====================================================
+# DEADTIME (optional)
+#=====================================================
+# Detector dead time modeling
+# Paralyzable model typical for scintillation detectors
+# Commented out by default - uncomment if needed
+#/gate/digitizer/Singles/insert deadtime
+#/gate/digitizer/Singles/deadtime/setDeadTime 1 us
+#/gate/digitizer/Singles/deadtime/setMode paralysable
+#/gate/digitizer/Singles/deadtime/chooseDTVolume crystal
+
+#=====================================================
+# NOTES
+#=====================================================
+# Energy window: 126.5-154.5 keV (20% window)
+# Energy resolution: 7% at 140.5 keV
+# Crystal size: 3mm x 3mm provides intrinsic spatial resolution

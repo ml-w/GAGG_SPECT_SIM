@@ -1,0 +1,151 @@
+#=====================================================
+# GEOMETRY - GAGG SPECT Pinhole System
+#=====================================================
+# System configuration:
+# - FOV diameter: 80 cm
+# - Detector panels arranged in ring geometry
+# - GAGG scintillator crystals: 3mm x 3mm x 10mm
+# - Crystal spacing: 0.1mm (pitch = 3.1mm)
+# - Pinhole collimators for each detector head
+
+#=====================================================
+# MATERIAL DATABASE
+#=====================================================
+/gate/geometry/setMaterialDatabase ../../GATE_scripts/Materials.xml
+
+#=====================================================
+# WORLD
+#=====================================================
+/gate/world/geometry/setXLength 200 cm
+/gate/world/geometry/setYLength 200 cm
+/gate/world/geometry/setZLength 200 cm
+/gate/world/setMaterial Air
+
+#=====================================================
+# SPECT SYSTEM
+#=====================================================
+# Create the SPECT system (cylindrical arrangement)
+/gate/world/daughters/name SPECThead
+/gate/world/daughters/insert box
+/gate/SPECThead/geometry/setXLength 1 cm
+/gate/SPECThead/geometry/setYLength 60 cm
+/gate/SPECThead/geometry/setZLength 60 cm
+/gate/SPECThead/placement/setTranslation 60 0 0 cm
+/gate/SPECThead/setMaterial Air
+/gate/SPECThead/vis/setColor white
+/gate/SPECThead/vis/forceWireframe
+
+#=====================================================
+# PINHOLE COLLIMATOR
+#=====================================================
+# Collimator housing (tungsten)
+/gate/SPECThead/daughters/name collimator
+/gate/SPECThead/daughters/insert box
+/gate/collimator/geometry/setXLength 5 mm
+/gate/collimator/geometry/setYLength 50 cm
+/gate/collimator/geometry/setZLength 50 cm
+/gate/collimator/placement/setTranslation -2.5 0 0 mm
+/gate/collimator/setMaterial Tungsten
+/gate/collimator/vis/setColor grey
+/gate/collimator/vis/forceSolid
+
+# Pinhole aperture (air-filled cone through collimator)
+/gate/collimator/daughters/name pinhole
+/gate/collimator/daughters/insert cone
+/gate/pinhole/geometry/setRmin1 0 mm
+/gate/pinhole/geometry/setRmax1 1.5 mm
+/gate/pinhole/geometry/setRmin2 0 mm
+/gate/pinhole/geometry/setRmax2 3 mm
+/gate/pinhole/geometry/setHeight 5 mm
+/gate/pinhole/placement/setTranslation 0 0 0 mm
+/gate/pinhole/setMaterial Air
+/gate/pinhole/vis/setColor blue
+/gate/pinhole/vis/forceWireframe
+
+#=====================================================
+# DETECTOR PANEL (BACKING)
+#=====================================================
+# Detector backing plate
+/gate/SPECThead/daughters/name detectorPlate
+/gate/SPECThead/daughters/insert box
+/gate/detectorPlate/geometry/setXLength 10 mm
+/gate/detectorPlate/geometry/setYLength 50 cm
+/gate/detectorPlate/geometry/setZLength 50 cm
+/gate/detectorPlate/placement/setTranslation 5 0 0 mm
+/gate/detectorPlate/setMaterial Aluminium
+/gate/detectorPlate/vis/setColor grey
+/gate/detectorPlate/vis/forceWireframe
+
+#=====================================================
+# DETECTOR MODULE (Crystal Array)
+#=====================================================
+# Individual detector module containing crystal array
+/gate/SPECThead/daughters/name detectorModule
+/gate/SPECThead/daughters/insert box
+/gate/detectorModule/geometry/setXLength 10 mm
+/gate/detectorModule/geometry/setYLength 50 cm
+/gate/detectorModule/geometry/setZLength 50 cm
+/gate/detectorModule/placement/setTranslation 0 0 0 mm
+/gate/detectorModule/setMaterial Air
+/gate/detectorModule/vis/setColor yellow
+/gate/detectorModule/vis/forceWireframe
+
+#=====================================================
+# GAGG CRYSTAL ELEMENT
+#=====================================================
+# Individual GAGG scintillator crystal
+/gate/detectorModule/daughters/name crystal
+/gate/detectorModule/daughters/insert box
+/gate/crystal/geometry/setXLength 10 mm
+/gate/crystal/geometry/setYLength 3 mm
+/gate/crystal/geometry/setZLength 3 mm
+/gate/crystal/setMaterial GAGG
+/gate/crystal/vis/setColor green
+/gate/crystal/vis/forceSolid
+
+#=====================================================
+# REPEAT CRYSTALS IN ARRAY
+#=====================================================
+# Create detector array with 3mm crystals + 0.1mm spacing = 3.1mm pitch
+# 50cm / 0.31cm = ~161 crystals per dimension
+# Using 160x160 array for symmetry
+/gate/crystal/repeaters/insert cubicArray
+/gate/crystal/cubicArray/setRepeatNumberX 1
+/gate/crystal/cubicArray/setRepeatNumberY 160
+/gate/crystal/cubicArray/setRepeatNumberZ 160
+/gate/crystal/cubicArray/setRepeatVector 0 3.1 3.1 mm
+
+#=====================================================
+# REPEAT DETECTOR HEADS AROUND RING
+#=====================================================
+# Typical SPECT systems use 2-4 heads
+# Using 3 heads (120 degrees apart) for optimal triangulation
+# Radius = 60 cm (to accommodate 80cm FOV diameter)
+/gate/SPECThead/repeaters/insert ring
+/gate/SPECThead/ring/setRepeatNumber 3
+
+#=====================================================
+# ATTACH SYSTEM TO GATE
+#=====================================================
+# Attach volumes to the SPECT system
+/gate/systems/SPECThead/crystal/attach crystal
+/gate/systems/SPECThead/pixel/attach crystal
+
+#=====================================================
+# SENSITIVE DETECTOR
+#=====================================================
+/gate/crystal/attachCrystalSD
+
+#=====================================================
+# FOV PHANTOM (for reference)
+#=====================================================
+# Water cylinder representing the FOV
+/gate/world/daughters/name FOV
+/gate/world/daughters/insert cylinder
+/gate/FOV/geometry/setRmax 40 cm
+/gate/FOV/geometry/setRmin 0 cm
+/gate/FOV/geometry/setHeight 50 cm
+/gate/FOV/setMaterial Water
+/gate/FOV/vis/setColor cyan
+/gate/FOV/vis/forceWireframe
+/gate/FOV/vis/setVisible 1
