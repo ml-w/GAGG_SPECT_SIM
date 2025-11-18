@@ -134,6 +134,357 @@
 /gate/source/source7/gps/confine NULL
 
 #=====================================================
+# RING SOURCES FOR RESOLUTION TEST
+#=====================================================
+# Ring sources of various diameters (0.1, 0.5, 1, 2, 3, 4, 5, 6 mm)
+# Each size has 3 rings oriented along X, Y, Z axes
+# All rings centered at (0, 30, 0) mm to separate from point sources
+
+#-----------------------------------------------------
+# 0.1 mm diameter rings (radius = 0.05 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_01
+/gate/source/ringX_01/gps/particle gamma
+/gate/source/ringX_01/gps/energytype Mono
+/gate/source/ringX_01/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_01/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_01/gps/angtype iso
+/gate/source/ringX_01/gps/type Plane
+/gate/source/ringX_01/gps/shape Circle
+/gate/source/ringX_01/gps/radius 0.05 mm
+/gate/source/ringX_01/gps/centre 0 30 0 mm
+/gate/source/ringX_01/gps/rot1 0 1 0
+/gate/source/ringX_01/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_01
+/gate/source/ringY_01/gps/particle gamma
+/gate/source/ringY_01/gps/energytype Mono
+/gate/source/ringY_01/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_01/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_01/gps/angtype iso
+/gate/source/ringY_01/gps/type Plane
+/gate/source/ringY_01/gps/shape Circle
+/gate/source/ringY_01/gps/radius 0.05 mm
+/gate/source/ringY_01/gps/centre 0 30 0 mm
+/gate/source/ringY_01/gps/rot1 1 0 0
+/gate/source/ringY_01/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_01
+/gate/source/ringZ_01/gps/particle gamma
+/gate/source/ringZ_01/gps/energytype Mono
+/gate/source/ringZ_01/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_01/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_01/gps/angtype iso
+/gate/source/ringZ_01/gps/type Plane
+/gate/source/ringZ_01/gps/shape Circle
+/gate/source/ringZ_01/gps/radius 0.05 mm
+/gate/source/ringZ_01/gps/centre 0 30 0 mm
+
+#-----------------------------------------------------
+# 0.5 mm diameter rings (radius = 0.25 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_05
+/gate/source/ringX_05/gps/particle gamma
+/gate/source/ringX_05/gps/energytype Mono
+/gate/source/ringX_05/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_05/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_05/gps/angtype iso
+/gate/source/ringX_05/gps/type Plane
+/gate/source/ringX_05/gps/shape Circle
+/gate/source/ringX_05/gps/radius 0.25 mm
+/gate/source/ringX_05/gps/centre 0 30 0 mm
+/gate/source/ringX_05/gps/rot1 0 1 0
+/gate/source/ringX_05/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_05
+/gate/source/ringY_05/gps/particle gamma
+/gate/source/ringY_05/gps/energytype Mono
+/gate/source/ringY_05/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_05/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_05/gps/angtype iso
+/gate/source/ringY_05/gps/type Plane
+/gate/source/ringY_05/gps/shape Circle
+/gate/source/ringY_05/gps/radius 0.25 mm
+/gate/source/ringY_05/gps/centre 0 30 0 mm
+/gate/source/ringY_05/gps/rot1 1 0 0
+/gate/source/ringY_05/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_05
+/gate/source/ringZ_05/gps/particle gamma
+/gate/source/ringZ_05/gps/energytype Mono
+/gate/source/ringZ_05/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_05/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_05/gps/angtype iso
+/gate/source/ringZ_05/gps/type Plane
+/gate/source/ringZ_05/gps/shape Circle
+/gate/source/ringZ_05/gps/radius 0.25 mm
+/gate/source/ringZ_05/gps/centre 0 30 0 mm
+
+#-----------------------------------------------------
+# 1 mm diameter rings (radius = 0.5 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_1
+/gate/source/ringX_1/gps/particle gamma
+/gate/source/ringX_1/gps/energytype Mono
+/gate/source/ringX_1/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_1/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_1/gps/angtype iso
+/gate/source/ringX_1/gps/type Plane
+/gate/source/ringX_1/gps/shape Circle
+/gate/source/ringX_1/gps/radius 0.5 mm
+/gate/source/ringX_1/gps/centre 0 30 0 mm
+/gate/source/ringX_1/gps/rot1 0 1 0
+/gate/source/ringX_1/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_1
+/gate/source/ringY_1/gps/particle gamma
+/gate/source/ringY_1/gps/energytype Mono
+/gate/source/ringY_1/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_1/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_1/gps/angtype iso
+/gate/source/ringY_1/gps/type Plane
+/gate/source/ringY_1/gps/shape Circle
+/gate/source/ringY_1/gps/radius 0.5 mm
+/gate/source/ringY_1/gps/centre 0 30 0 mm
+/gate/source/ringY_1/gps/rot1 1 0 0
+/gate/source/ringY_1/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_1
+/gate/source/ringZ_1/gps/particle gamma
+/gate/source/ringZ_1/gps/energytype Mono
+/gate/source/ringZ_1/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_1/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_1/gps/angtype iso
+/gate/source/ringZ_1/gps/type Plane
+/gate/source/ringZ_1/gps/shape Circle
+/gate/source/ringZ_1/gps/radius 0.5 mm
+/gate/source/ringZ_1/gps/centre 0 30 0 mm
+
+#-----------------------------------------------------
+# 2 mm diameter rings (radius = 1 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_2
+/gate/source/ringX_2/gps/particle gamma
+/gate/source/ringX_2/gps/energytype Mono
+/gate/source/ringX_2/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_2/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_2/gps/angtype iso
+/gate/source/ringX_2/gps/type Plane
+/gate/source/ringX_2/gps/shape Circle
+/gate/source/ringX_2/gps/radius 1 mm
+/gate/source/ringX_2/gps/centre 0 30 0 mm
+/gate/source/ringX_2/gps/rot1 0 1 0
+/gate/source/ringX_2/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_2
+/gate/source/ringY_2/gps/particle gamma
+/gate/source/ringY_2/gps/energytype Mono
+/gate/source/ringY_2/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_2/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_2/gps/angtype iso
+/gate/source/ringY_2/gps/type Plane
+/gate/source/ringY_2/gps/shape Circle
+/gate/source/ringY_2/gps/radius 1 mm
+/gate/source/ringY_2/gps/centre 0 30 0 mm
+/gate/source/ringY_2/gps/rot1 1 0 0
+/gate/source/ringY_2/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_2
+/gate/source/ringZ_2/gps/particle gamma
+/gate/source/ringZ_2/gps/energytype Mono
+/gate/source/ringZ_2/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_2/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_2/gps/angtype iso
+/gate/source/ringZ_2/gps/type Plane
+/gate/source/ringZ_2/gps/shape Circle
+/gate/source/ringZ_2/gps/radius 1 mm
+/gate/source/ringZ_2/gps/centre 0 30 0 mm
+
+#-----------------------------------------------------
+# 3 mm diameter rings (radius = 1.5 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_3
+/gate/source/ringX_3/gps/particle gamma
+/gate/source/ringX_3/gps/energytype Mono
+/gate/source/ringX_3/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_3/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_3/gps/angtype iso
+/gate/source/ringX_3/gps/type Plane
+/gate/source/ringX_3/gps/shape Circle
+/gate/source/ringX_3/gps/radius 1.5 mm
+/gate/source/ringX_3/gps/centre 0 30 0 mm
+/gate/source/ringX_3/gps/rot1 0 1 0
+/gate/source/ringX_3/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_3
+/gate/source/ringY_3/gps/particle gamma
+/gate/source/ringY_3/gps/energytype Mono
+/gate/source/ringY_3/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_3/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_3/gps/angtype iso
+/gate/source/ringY_3/gps/type Plane
+/gate/source/ringY_3/gps/shape Circle
+/gate/source/ringY_3/gps/radius 1.5 mm
+/gate/source/ringY_3/gps/centre 0 30 0 mm
+/gate/source/ringY_3/gps/rot1 1 0 0
+/gate/source/ringY_3/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_3
+/gate/source/ringZ_3/gps/particle gamma
+/gate/source/ringZ_3/gps/energytype Mono
+/gate/source/ringZ_3/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_3/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_3/gps/angtype iso
+/gate/source/ringZ_3/gps/type Plane
+/gate/source/ringZ_3/gps/shape Circle
+/gate/source/ringZ_3/gps/radius 1.5 mm
+/gate/source/ringZ_3/gps/centre 0 30 0 mm
+
+#-----------------------------------------------------
+# 4 mm diameter rings (radius = 2 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_4
+/gate/source/ringX_4/gps/particle gamma
+/gate/source/ringX_4/gps/energytype Mono
+/gate/source/ringX_4/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_4/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_4/gps/angtype iso
+/gate/source/ringX_4/gps/type Plane
+/gate/source/ringX_4/gps/shape Circle
+/gate/source/ringX_4/gps/radius 2 mm
+/gate/source/ringX_4/gps/centre 0 30 0 mm
+/gate/source/ringX_4/gps/rot1 0 1 0
+/gate/source/ringX_4/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_4
+/gate/source/ringY_4/gps/particle gamma
+/gate/source/ringY_4/gps/energytype Mono
+/gate/source/ringY_4/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_4/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_4/gps/angtype iso
+/gate/source/ringY_4/gps/type Plane
+/gate/source/ringY_4/gps/shape Circle
+/gate/source/ringY_4/gps/radius 2 mm
+/gate/source/ringY_4/gps/centre 0 30 0 mm
+/gate/source/ringY_4/gps/rot1 1 0 0
+/gate/source/ringY_4/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_4
+/gate/source/ringZ_4/gps/particle gamma
+/gate/source/ringZ_4/gps/energytype Mono
+/gate/source/ringZ_4/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_4/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_4/gps/angtype iso
+/gate/source/ringZ_4/gps/type Plane
+/gate/source/ringZ_4/gps/shape Circle
+/gate/source/ringZ_4/gps/radius 2 mm
+/gate/source/ringZ_4/gps/centre 0 30 0 mm
+
+#-----------------------------------------------------
+# 5 mm diameter rings (radius = 2.5 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_5
+/gate/source/ringX_5/gps/particle gamma
+/gate/source/ringX_5/gps/energytype Mono
+/gate/source/ringX_5/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_5/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_5/gps/angtype iso
+/gate/source/ringX_5/gps/type Plane
+/gate/source/ringX_5/gps/shape Circle
+/gate/source/ringX_5/gps/radius 2.5 mm
+/gate/source/ringX_5/gps/centre 0 30 0 mm
+/gate/source/ringX_5/gps/rot1 0 1 0
+/gate/source/ringX_5/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_5
+/gate/source/ringY_5/gps/particle gamma
+/gate/source/ringY_5/gps/energytype Mono
+/gate/source/ringY_5/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_5/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_5/gps/angtype iso
+/gate/source/ringY_5/gps/type Plane
+/gate/source/ringY_5/gps/shape Circle
+/gate/source/ringY_5/gps/radius 2.5 mm
+/gate/source/ringY_5/gps/centre 0 30 0 mm
+/gate/source/ringY_5/gps/rot1 1 0 0
+/gate/source/ringY_5/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_5
+/gate/source/ringZ_5/gps/particle gamma
+/gate/source/ringZ_5/gps/energytype Mono
+/gate/source/ringZ_5/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_5/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_5/gps/angtype iso
+/gate/source/ringZ_5/gps/type Plane
+/gate/source/ringZ_5/gps/shape Circle
+/gate/source/ringZ_5/gps/radius 2.5 mm
+/gate/source/ringZ_5/gps/centre 0 30 0 mm
+
+#-----------------------------------------------------
+# 6 mm diameter rings (radius = 3 mm)
+#-----------------------------------------------------
+# Ring aligned with X-axis (in YZ plane)
+/gate/source/addSource ringX_6
+/gate/source/ringX_6/gps/particle gamma
+/gate/source/ringX_6/gps/energytype Mono
+/gate/source/ringX_6/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringX_6/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringX_6/gps/angtype iso
+/gate/source/ringX_6/gps/type Plane
+/gate/source/ringX_6/gps/shape Circle
+/gate/source/ringX_6/gps/radius 3 mm
+/gate/source/ringX_6/gps/centre 0 30 0 mm
+/gate/source/ringX_6/gps/rot1 0 1 0
+/gate/source/ringX_6/gps/rot2 0 0 1
+
+# Ring aligned with Y-axis (in XZ plane)
+/gate/source/addSource ringY_6
+/gate/source/ringY_6/gps/particle gamma
+/gate/source/ringY_6/gps/energytype Mono
+/gate/source/ringY_6/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringY_6/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringY_6/gps/angtype iso
+/gate/source/ringY_6/gps/type Plane
+/gate/source/ringY_6/gps/shape Circle
+/gate/source/ringY_6/gps/radius 3 mm
+/gate/source/ringY_6/gps/centre 0 30 0 mm
+/gate/source/ringY_6/gps/rot1 1 0 0
+/gate/source/ringY_6/gps/rot2 0 0 1
+
+# Ring aligned with Z-axis (in XY plane)
+/gate/source/addSource ringZ_6
+/gate/source/ringZ_6/gps/particle gamma
+/gate/source/ringZ_6/gps/energytype Mono
+/gate/source/ringZ_6/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/ringZ_6/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/ringZ_6/gps/angtype iso
+/gate/source/ringZ_6/gps/type Plane
+/gate/source/ringZ_6/gps/shape Circle
+/gate/source/ringZ_6/gps/radius 3 mm
+/gate/source/ringZ_6/gps/centre 0 30 0 mm
+
+#=====================================================
 # NOTES
 #=====================================================
 # Resolution Test Pattern:
@@ -141,6 +492,12 @@
 #   - Positions: 0, 1, 3, 6, 10, 15, 21 mm
 #   - Spacing increases: 1, 2, 3, 4, 5, 6 mm
 #   - Tests spatial resolution at mm-scale precision
+#
+# Ring Sources:
+#   - 8 sizes: 0.1, 0.5, 1, 2, 3, 4, 5, 6 mm diameter
+#   - 3 orientations per size: X, Y, Z aligned
+#   - Total: 24 ring sources centered at (0, 30, 0) mm
+#   - Tests resolution for different ring diameters
 #
 # Supported Tracers:
 #   - Tc-99m: 140.5 keV (most common SPECT isotope)
