@@ -23,19 +23,73 @@ This project simulates a SPECT (Single Photon Emission Computed Tomography) imag
 - **Purpose**: Provides magnification and spatial resolution
 
 ### Field of View (FOV)
-- **Diameter**: 80 cm
-- **Geometry**: Cylindrical water phantom (50 cm height)
+Two switchable FOV configurations are available:
+
+**Large FOV (80 cm diameter)** - Default
+- **Radius**: 40 cm
+- **Height**: 50 cm
 - **Detector Radius**: 60 cm from center
+- **Use case**: Standard clinical imaging
+
+**Small FOV (10 cm diameter)**
+- **Radius**: 5 cm
+- **Height**: 10 cm
+- **Detector Radius**: 10 cm from center
+- **Use case**: Small animal or high-resolution imaging
+
+To switch FOV, edit `geometry.mac` and uncomment the desired configuration.
+
+### Detector Rotation
+- **Rotation axis**: Y-axis (vertical)
+- **Speed**: Configurable (default: 0 deg/s = static)
+- **Examples**: 6 deg/s = 60s full rotation, 1 deg/s = 360s full rotation
+- **Use case**: SPECT tomographic acquisition
 
 ### Source Configuration
-- **Radioisotope**: Tc-99m (Technetium-99m)
-- **Gamma Energy**: 140.5 keV (primary emission)
-- **Number of Point Sources**: 3
-- **Source Positions**:
-  - Source 1: (0, 0, 0) cm - center
-  - Source 2: (10, 0, 10) cm - diagonal offset
-  - Source 3: (-10, 0, -10) cm - opposite diagonal
-- **Activity per Source**: 1 MBq
+
+#### Configurable Tracers
+The following radioisotopes are supported (edit `source.mac` to change):
+
+| Tracer | Energy (keV) | Application |
+|--------|--------------|-------------|
+| **Tc-99m** | 140.5 | General SPECT (default) |
+| I-123 | 159.0 | Thyroid imaging |
+| I-131 | 364.0 | Thyroid therapy |
+| Tl-201 | 71.0 | Cardiac imaging |
+| In-111 | 171.0 | Infection imaging |
+
+#### Point Sources (Resolution Test Pattern)
+7 point sources arranged along Z-axis with increasing spacing:
+
+| Source | Position (mm) | Spacing (mm) |
+|--------|---------------|--------------|
+| 1 | 0 | - |
+| 2 | 1 | 1 |
+| 3 | 3 | 2 |
+| 4 | 6 | 3 |
+| 5 | 10 | 4 |
+| 6 | 15 | 5 |
+| 7 | 21 | 6 |
+
+- **Activity per Source**: 1 MBq (configurable)
+
+#### Ring Sources (Resolution Test)
+24 ring sources for testing resolution at different diameters:
+
+| Diameter (mm) | Orientations | Center Position |
+|---------------|--------------|-----------------|
+| 0.1 | X, Y, Z | (0, 30, 0) mm |
+| 0.5 | X, Y, Z | (0, 30, 0) mm |
+| 1 | X, Y, Z | (0, 30, 0) mm |
+| 2 | X, Y, Z | (0, 30, 0) mm |
+| 3 | X, Y, Z | (0, 30, 0) mm |
+| 4 | X, Y, Z | (0, 30, 0) mm |
+| 5 | X, Y, Z | (0, 30, 0) mm |
+| 6 | X, Y, Z | (0, 30, 0) mm |
+
+- Each size has 3 rings aligned with X, Y, Z axes
+- Total: 24 ring sources
+- Ring orientations: X-aligned (YZ plane), Y-aligned (XZ plane), Z-aligned (XY plane)
 
 ## GAGG Scintillator Properties
 
@@ -89,7 +143,27 @@ GAGG_SPECT/
 - ROOT (for output analysis)
 - Docker image: `opengatecollaboration/gate:9.4`
 
-### Command-line Execution (Headless)
+### Starting the Simulation
+
+#### Step 1: Configure the Simulation
+
+Before running, review and modify these configuration files as needed:
+
+1. **Tracer Selection** (`source.mac`):
+   - Uncomment the desired tracer energy alias (default: Tc-99m)
+
+2. **FOV Selection** (`geometry.mac`):
+   - Uncomment either Large FOV (80cm) or Small FOV (10cm) configuration
+
+3. **Detector Rotation** (`geometry.mac`):
+   - Set `ROTATION_SPEED` alias (0 = static, 6 = one rotation per minute)
+
+4. **Simulation Duration** (`main.mac`):
+   - Modify `/gate/application/setTimeStop` (default: 1 s)
+
+#### Step 2: Run the Simulation
+
+**Command-line Execution (Headless/Production)**
 
 From the project root directory:
 
@@ -100,26 +174,75 @@ docker run -i --rm \
   Projects/GAGG_SPECT/GATE_scripts/main.mac
 ```
 
-### Interactive Mode with Visualization
-
-```bash
-docker run -it --rm \
-  -v $PWD:/APP \
-  --volume="$HOME/.Xauthority:/root/.Xauthority:rw" \
-  --net=host -e DISPLAY=$DISPLAY \
-  opengatecollaboration/gate:9.4 \
-  --qt Projects/GAGG_SPECT/GATE_scripts/main.mac
-```
-
-**Note**: Visualization requires X11 server on host (see main [CLAUDE.md](../../CLAUDE.md) for setup)
-
-### Using the Project Script
+**Using the Project Script**
 
 Alternatively, from the repository root:
 
 ```bash
 ./run_gate.sh Projects/GAGG_SPECT/GATE_scripts/main.mac
 ```
+
+## Visualizing the Scene
+
+### Method 1: Interactive OpenGL Visualization
+
+To visualize the geometry and particle tracks in real-time:
+
+1. **Enable visualization** in `main.mac` by uncommenting:
+   ```
+   /control/execute visu.mac
+   ```
+
+2. **Run with Qt interface**:
+   ```bash
+   docker run -it --rm \
+     -v $PWD:/APP \
+     --volume="$HOME/.Xauthority:/root/.Xauthority:rw" \
+     --net=host -e DISPLAY=$DISPLAY \
+     opengatecollaboration/gate:9.4 \
+     --qt Projects/GAGG_SPECT/GATE_scripts/main.mac
+   ```
+
+3. **Visualization controls** (in Qt viewer):
+   - Rotate: Left mouse button + drag
+   - Zoom: Scroll wheel or right mouse button + drag
+   - Pan: Middle mouse button + drag
+   - View preset: `/vis/viewer/set/viewpointThetaPhi 70 20`
+
+**Note**: Requires X11 server on host. On Linux, run `xhost +local:docker` first.
+
+### Method 2: Export to VRML/GDML for External Viewers
+
+Add to `visu.mac` for file export:
+
+```
+# Export to VRML (viewable in many 3D viewers)
+/vis/open VRML2FILE
+/vis/drawVolume
+/vis/viewer/flush
+
+# Export to GDML (Geant4 geometry format)
+/gate/geometry/export geometry.gdml
+```
+
+### Visualization Settings
+
+The `visu.mac` file configures:
+- **Window size**: 600x600 pixels
+- **Viewing angle**: theta=70°, phi=20°
+- **Zoom**: 1.5x
+- **Style**: Wireframe (can change to `surface`)
+- **Trajectories**: Particle tracks are displayed
+- **Axes**: 10 cm coordinate axes at origin
+
+### What You'll See
+
+- **White boxes**: SPECT detector heads (3 at 120° intervals)
+- **Grey solid**: Tungsten collimator with blue pinhole
+- **Green blocks**: GAGG crystal array
+- **Cyan wireframe**: FOV water phantom cylinder
+- **Colored tracks**: Gamma rays (green), electrons (red)
+- **Axes**: X (red), Y (green), Z (blue)
 
 ## Output Files
 
@@ -134,9 +257,144 @@ After running the simulation, the following files are created in `output/`:
 - **GAGG_SPECT_projection.hdr**: Header file with metadata
 - **GAGG_SPECT_projection.sin**: Sinogram data (projection images)
 
-### Analyzing Results
+## Collecting Sinogram Data
 
-Use ROOT to inspect the data:
+### What is a Sinogram?
+
+A sinogram is a 2D representation of projection data acquired at multiple angles around the object. In SPECT imaging, sinograms are used for tomographic image reconstruction.
+
+### Sinogram Configuration
+
+The sinogram output is configured in `output.mac`:
+
+```bash
+/gate/output/projection/enable
+/gate/output/projection/setFileName ../output/GAGG_SPECT_projection
+/gate/output/projection/pixelSizeX 3.1 mm      # Matches detector pixel pitch
+/gate/output/projection/pixelSizeY 3.1 mm
+/gate/output/projection/pixelNumberX 160       # Matches detector array size
+/gate/output/projection/pixelNumberY 160
+/gate/output/projection/projectionPlane YZ     # Projection plane orientation
+```
+
+### Acquiring Sinogram Data
+
+#### For Static Acquisition (Single Projection)
+
+1. Set `ROTATION_SPEED 0` in `geometry.mac`
+2. Run simulation for desired duration
+3. Output: Single projection image
+
+#### For Tomographic Acquisition (Multiple Projections)
+
+1. **Enable detector rotation** in `geometry.mac`:
+   ```
+   /control/alias ROTATION_SPEED 6
+   ```
+   This gives 6°/s rotation = 60 projections in 60 seconds (1° steps)
+
+2. **Configure time slices** in `main.mac`:
+   ```bash
+   /gate/application/setTimeSlice 1 s      # Time per projection
+   /gate/application/setTimeStart 0 s
+   /gate/application/setTimeStop 60 s      # Total acquisition time
+   ```
+
+3. **Run the simulation**:
+   - This produces 60 projection images (one per second)
+   - Each image corresponds to a different detector angle
+
+### Sinogram File Format
+
+#### Interfile Header (`.hdr`)
+
+The header file contains metadata about the sinogram:
+
+```
+!INTERFILE :=
+!imaging modality := nucmed
+!version of keys := 3.3
+!name of data file := GAGG_SPECT_projection.sin
+!matrix size [1] := 160
+!matrix size [2] := 160
+!number of projections := 60
+!extent of rotation := 360
+!process status := acquired
+```
+
+#### Binary Data (`.sin`)
+
+The sinogram data is stored as:
+- Format: 32-bit float (little-endian)
+- Dimensions: [number_of_projections] × [pixelNumberY] × [pixelNumberX]
+- Order: Projection-major (all pixels for projection 0, then projection 1, etc.)
+
+### Reading Sinogram Data
+
+#### Using Python
+
+```python
+import numpy as np
+
+# Read binary sinogram data
+n_projections = 60
+n_pixels_y = 160
+n_pixels_x = 160
+
+sinogram = np.fromfile('output/GAGG_SPECT_projection.sin', dtype=np.float32)
+sinogram = sinogram.reshape((n_projections, n_pixels_y, n_pixels_x))
+
+# Display a single projection
+import matplotlib.pyplot as plt
+plt.imshow(sinogram[0], cmap='hot')
+plt.colorbar(label='Counts')
+plt.title('Projection at 0°')
+plt.show()
+
+# Display sinogram (single slice)
+slice_idx = 80  # Middle slice
+sino_slice = sinogram[:, slice_idx, :]
+plt.imshow(sino_slice, aspect='auto', cmap='hot')
+plt.xlabel('Detector bin')
+plt.ylabel('Projection angle')
+plt.title(f'Sinogram (slice {slice_idx})')
+plt.show()
+```
+
+#### Using MATLAB
+
+```matlab
+% Read sinogram
+fid = fopen('output/GAGG_SPECT_projection.sin', 'rb');
+sinogram = fread(fid, [160*160*60], 'float32');
+fclose(fid);
+
+% Reshape
+sinogram = reshape(sinogram, [160, 160, 60]);
+sinogram = permute(sinogram, [3, 2, 1]);  % [projections, y, x]
+
+% Display
+imagesc(squeeze(sinogram(1, :, :)));
+colorbar;
+title('Projection at 0°');
+```
+
+### Image Reconstruction
+
+Sinograms can be reconstructed using standard SPECT algorithms:
+
+1. **Filtered Back-Projection (FBP)**: Fast, analytical method
+2. **MLEM (Maximum Likelihood Expectation Maximization)**: Iterative, better noise handling
+3. **OSEM (Ordered Subsets EM)**: Accelerated MLEM
+
+Popular reconstruction tools:
+- **STIR** (Software for Tomographic Image Reconstruction)
+- **CASToR** (Customizable and Advanced Software for Tomographic Reconstruction)
+- **NiftyRec** (GPU-accelerated reconstruction)
+
+### Analyzing Results with ROOT
+
+Use ROOT to inspect the raw event data:
 
 ```bash
 root -l output/GAGG_SPECT.root
@@ -152,7 +410,25 @@ Hits->Draw("posX:posY")
 
 // Energy spectrum
 Singles->Draw("energy", "energy>100 && energy<200")
+
+// Detector head distribution
+Singles->Draw("headID")
+
+// Crystal positions
+Singles->Draw("globalPosY:globalPosZ", "headID==0")
+
+// Time distribution (for rotation studies)
+Singles->Draw("time")
 ```
+
+### Quality Control
+
+To verify sinogram quality:
+
+1. **Check counts**: Total counts should match expected activity × time × sensitivity
+2. **Uniformity**: Uniform source should produce uniform projection
+3. **Center of rotation**: Point source should trace sine wave in sinogram
+4. **Resolution**: Point sources should appear as sharp peaks
 
 ## Customization
 

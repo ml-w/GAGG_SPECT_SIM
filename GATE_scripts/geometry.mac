@@ -2,11 +2,40 @@
 # GEOMETRY - GAGG SPECT Pinhole System
 #=====================================================
 # System configuration:
-# - FOV diameter: 80 cm
-# - Detector panels arranged in ring geometry
+# - Switchable FOV: 80cm or 10cm diameter
+# - Detector panels arranged in ring geometry with rotation
 # - GAGG scintillator crystals: 3mm x 3mm x 10mm
 # - Crystal spacing: 0.1mm (pitch = 3.1mm)
 # - Pinhole collimators for each detector head
+
+#=====================================================
+# FOV CONFIGURATION - SELECT ONE
+#=====================================================
+# Uncomment ONE of the following FOV configurations:
+
+# --- LARGE FOV: 80 cm diameter ---
+/control/alias FOV_RADIUS 40
+/control/alias FOV_HEIGHT 50
+/control/alias DETECTOR_RADIUS 60
+/control/alias FOV_NAME "80cm"
+
+# --- SMALL FOV: 10 cm diameter ---
+#/control/alias FOV_RADIUS 5
+#/control/alias FOV_HEIGHT 10
+#/control/alias DETECTOR_RADIUS 10
+#/control/alias FOV_NAME "10cm"
+
+#=====================================================
+# DETECTOR ROTATION CONFIGURATION
+#=====================================================
+# Enable detector rotation around FOV (SPECT acquisition)
+# Set to 0 for static acquisition, or rotation speed for dynamic
+
+/control/alias ROTATION_SPEED 0
+# Examples:
+#   0 deg/s = static (no rotation)
+#   6 deg/s = 60 seconds for full rotation
+#   1 deg/s = 360 seconds for full rotation
 
 #=====================================================
 # MATERIAL DATABASE
@@ -30,10 +59,20 @@
 /gate/SPECThead/geometry/setXLength 1 cm
 /gate/SPECThead/geometry/setYLength 60 cm
 /gate/SPECThead/geometry/setZLength 60 cm
-/gate/SPECThead/placement/setTranslation 60 0 0 cm
+/gate/SPECThead/placement/setTranslation {DETECTOR_RADIUS} 0 0 cm
 /gate/SPECThead/setMaterial Air
 /gate/SPECThead/vis/setColor white
 /gate/SPECThead/vis/forceWireframe
+
+#=====================================================
+# DETECTOR ROTATION (Orbit Movement)
+#=====================================================
+# Add orbital movement for detector rotation around FOV
+# The SPECThead will rotate around the Y-axis (vertical)
+/gate/SPECThead/moves/insert orbiting
+/gate/SPECThead/orbiting/setSpeed {ROTATION_SPEED} deg/s
+/gate/SPECThead/orbiting/setPoint1 0 0 0 cm
+/gate/SPECThead/orbiting/setPoint2 0 1 0 cm
 
 #=====================================================
 # PINHOLE COLLIMATOR
@@ -120,7 +159,6 @@
 #=====================================================
 # Typical SPECT systems use 2-4 heads
 # Using 3 heads (120 degrees apart) for optimal triangulation
-# Radius = 60 cm (to accommodate 80cm FOV diameter)
 /gate/SPECThead/repeaters/insert ring
 /gate/SPECThead/ring/setRepeatNumber 3
 
@@ -142,10 +180,28 @@
 # Water cylinder representing the FOV
 /gate/world/daughters/name FOV
 /gate/world/daughters/insert cylinder
-/gate/FOV/geometry/setRmax 40 cm
+/gate/FOV/geometry/setRmax {FOV_RADIUS} cm
 /gate/FOV/geometry/setRmin 0 cm
-/gate/FOV/geometry/setHeight 50 cm
+/gate/FOV/geometry/setHeight {FOV_HEIGHT} cm
 /gate/FOV/setMaterial Water
 /gate/FOV/vis/setColor cyan
 /gate/FOV/vis/forceWireframe
 /gate/FOV/vis/setVisible 1
+
+#=====================================================
+# CONFIGURATION NOTES
+#=====================================================
+# FOV Configurations:
+#   - Large FOV (80cm): 40cm radius, 50cm height, detector at 60cm
+#   - Small FOV (10cm): 5cm radius, 10cm height, detector at 10cm
+#
+# Detector Rotation:
+#   - Set ROTATION_SPEED to enable continuous rotation
+#   - Rotation is around Y-axis (vertical)
+#   - For static acquisition, use ROTATION_SPEED = 0
+#   - Example: 6 deg/s gives full rotation in 60s
+#
+# Ring Geometry:
+#   - 3 detector heads at 120 degree intervals
+#   - Each head has 160x160 GAGG crystal array
+#   - Pinhole collimator with 1.5mm entrance aperture
