@@ -1,57 +1,157 @@
 #=====================================================
-# SOURCE CONFIGURATION - 3 Point Sources
+# SOURCE CONFIGURATION - Resolution Test Point Sources
 #=====================================================
-# Three Tc-99m point sources positioned within 80cm FOV
-# Tc-99m emits 140.5 keV gamma rays (primary SPECT isotope)
-# Sources positioned in triangular pattern for testing
+# Off-center point sources with increasing spacing for resolution testing
+# Configurable tracer isotopes
+# Sources arranged along Z-axis at Y=0
 
 #=====================================================
-# SOURCE 1 - Center
+# TRACER CONFIGURATION
 #=====================================================
+# Uncomment ONE of the following tracer configurations:
+
+# --- Tc-99m (Technetium-99m) - Primary SPECT isotope ---
+/control/alias TRACER_ENERGY 140.5
+/control/alias TRACER_NAME "Tc-99m"
+
+# --- I-123 (Iodine-123) - Thyroid imaging ---
+#/control/alias TRACER_ENERGY 159.0
+#/control/alias TRACER_NAME "I-123"
+
+# --- I-131 (Iodine-131) - Thyroid therapy/imaging ---
+#/control/alias TRACER_ENERGY 364.0
+#/control/alias TRACER_NAME "I-131"
+
+# --- Tl-201 (Thallium-201) - Cardiac imaging ---
+#/control/alias TRACER_ENERGY 71.0
+#/control/alias TRACER_NAME "Tl-201"
+
+# --- In-111 (Indium-111) - Infection/tumor imaging ---
+#/control/alias TRACER_ENERGY 171.0
+#/control/alias TRACER_NAME "In-111"
+
+#=====================================================
+# ACTIVITY CONFIGURATION
+#=====================================================
+/control/alias SOURCE_ACTIVITY 1
+
+#=====================================================
+# OFF-CENTER POINT SOURCES WITH INCREASING SPACING
+#=====================================================
+# Resolution test pattern: sources at increasing distances from center
+# Spacing pattern: 0, 1, 3, 6, 10, 15, 21 mm (increasing by 1,2,3,4,5,6 mm)
+# This allows testing spatial resolution at mm-scale precision
+
+#-----------------------------------------------------
+# SOURCE 1 - Center (reference)
+#-----------------------------------------------------
 /gate/source/addSource source1
 /gate/source/source1/gps/particle gamma
 /gate/source/source1/gps/energytype Mono
-/gate/source/source1/gps/monoenergy 140.5 keV
-/gate/source/source1/setActivity 1 MBq
+/gate/source/source1/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/source1/setActivity {SOURCE_ACTIVITY} MBq
 /gate/source/source1/gps/angtype iso
 /gate/source/source1/gps/type Point
-/gate/source/source1/gps/centre 0 0 0 cm
+/gate/source/source1/gps/centre 0 0 0 mm
 /gate/source/source1/gps/confine NULL
 
-#=====================================================
-# SOURCE 2 - Offset position 1
-#=====================================================
+#-----------------------------------------------------
+# SOURCE 2 - 1 mm from center (spacing = 1 mm)
+#-----------------------------------------------------
 /gate/source/addSource source2
 /gate/source/source2/gps/particle gamma
 /gate/source/source2/gps/energytype Mono
-/gate/source/source2/gps/monoenergy 140.5 keV
-/gate/source/source2/setActivity 1 MBq
+/gate/source/source2/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/source2/setActivity {SOURCE_ACTIVITY} MBq
 /gate/source/source2/gps/angtype iso
 /gate/source/source2/gps/type Point
-/gate/source/source2/gps/centre 10 0 10 cm
+/gate/source/source2/gps/centre 0 0 1 mm
 /gate/source/source2/gps/confine NULL
 
-#=====================================================
-# SOURCE 3 - Offset position 2
-#=====================================================
+#-----------------------------------------------------
+# SOURCE 3 - 3 mm from center (spacing = 2 mm)
+#-----------------------------------------------------
 /gate/source/addSource source3
 /gate/source/source3/gps/particle gamma
 /gate/source/source3/gps/energytype Mono
-/gate/source/source3/gps/monoenergy 140.5 keV
-/gate/source/source3/setActivity 1 MBq
+/gate/source/source3/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/source3/setActivity {SOURCE_ACTIVITY} MBq
 /gate/source/source3/gps/angtype iso
 /gate/source/source3/gps/type Point
-/gate/source/source3/gps/centre -10 0 -10 cm
+/gate/source/source3/gps/centre 0 0 3 mm
 /gate/source/source3/gps/confine NULL
+
+#-----------------------------------------------------
+# SOURCE 4 - 6 mm from center (spacing = 3 mm)
+#-----------------------------------------------------
+/gate/source/addSource source4
+/gate/source/source4/gps/particle gamma
+/gate/source/source4/gps/energytype Mono
+/gate/source/source4/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/source4/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/source4/gps/angtype iso
+/gate/source/source4/gps/type Point
+/gate/source/source4/gps/centre 0 0 6 mm
+/gate/source/source4/gps/confine NULL
+
+#-----------------------------------------------------
+# SOURCE 5 - 10 mm from center (spacing = 4 mm)
+#-----------------------------------------------------
+/gate/source/addSource source5
+/gate/source/source5/gps/particle gamma
+/gate/source/source5/gps/energytype Mono
+/gate/source/source5/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/source5/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/source5/gps/angtype iso
+/gate/source/source5/gps/type Point
+/gate/source/source5/gps/centre 0 0 10 mm
+/gate/source/source5/gps/confine NULL
+
+#-----------------------------------------------------
+# SOURCE 6 - 15 mm from center (spacing = 5 mm)
+#-----------------------------------------------------
+/gate/source/addSource source6
+/gate/source/source6/gps/particle gamma
+/gate/source/source6/gps/energytype Mono
+/gate/source/source6/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/source6/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/source6/gps/angtype iso
+/gate/source/source6/gps/type Point
+/gate/source/source6/gps/centre 0 0 15 mm
+/gate/source/source6/gps/confine NULL
+
+#-----------------------------------------------------
+# SOURCE 7 - 21 mm from center (spacing = 6 mm)
+#-----------------------------------------------------
+/gate/source/addSource source7
+/gate/source/source7/gps/particle gamma
+/gate/source/source7/gps/energytype Mono
+/gate/source/source7/gps/monoenergy {TRACER_ENERGY} keV
+/gate/source/source7/setActivity {SOURCE_ACTIVITY} MBq
+/gate/source/source7/gps/angtype iso
+/gate/source/source7/gps/type Point
+/gate/source/source7/gps/centre 0 0 21 mm
+/gate/source/source7/gps/confine NULL
 
 #=====================================================
 # NOTES
 #=====================================================
-# - All sources use Tc-99m characteristic 140.5 keV gamma emission
-# - Isotropic emission (angtype iso)
-# - Equal activity (1 MBq each)
-# - Sources positioned within 80cm FOV diameter:
-#   * Source 1: Origin (0, 0, 0)
-#   * Source 2: (10, 0, 10) cm - diagonal offset
-#   * Source 3: (-10, 0, -10) cm - opposite diagonal
-# - All positions well within 40cm radius (80cm diameter FOV)
+# Resolution Test Pattern:
+#   - 7 point sources arranged along Z-axis
+#   - Positions: 0, 1, 3, 6, 10, 15, 21 mm
+#   - Spacing increases: 1, 2, 3, 4, 5, 6 mm
+#   - Tests spatial resolution at mm-scale precision
+#
+# Supported Tracers:
+#   - Tc-99m: 140.5 keV (most common SPECT isotope)
+#   - I-123:  159.0 keV (thyroid imaging)
+#   - I-131:  364.0 keV (thyroid therapy)
+#   - Tl-201:  71.0 keV (cardiac imaging)
+#   - In-111: 171.0 keV (infection imaging)
+#
+# To change tracer: uncomment desired energy alias above
+# To change activity: modify SOURCE_ACTIVITY alias
+#
+# Maximum source position (21 mm = 2.1 cm) fits within:
+#   - 80 cm FOV (40 cm radius): YES
+#   - 10 cm FOV (5 cm radius): YES
