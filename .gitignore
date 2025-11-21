@@ -27,3 +27,10 @@ MANIFEST
 *.raw
 *.root
 *.svg
+*.npy
+*.nii.gz
+
+# Output directories
+output_*/
+test_*/
+reconstruction/
