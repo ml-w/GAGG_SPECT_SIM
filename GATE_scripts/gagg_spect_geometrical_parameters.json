@@ -1,0 +1,68 @@
+{
+  "detector_name": "GAGG_SPECT_Pinhole",
+  "description": "GAGG scintillator SPECT system with configurable crystal dimensions and FOV",
+
+  "comment_crystal": "Crystal dimensions (configurable)",
+  "crystal_size_x_mm": 3.0,
+  "crystal_size_y_mm": 3.0,
+  "crystal_thickness_mm": 10.0,
+  "crystal_spacing_mm": 0.1,
+  "crystal_array_size_x": 160,
+  "crystal_array_size_y": 160,
+  "crystal_material": "GAGG",
+
+  "comment_detector": "Detector panel dimensions (computed from crystal array)",
+  "detector_size_x_mm": 496.0,
+  "detector_size_y_mm": 496.0,
+
+  "comment_collimator": "Pinhole collimator parameters",
+  "collimator_type": "pinhole",
+  "collimator_material": "Tungsten",
+  "collimator_thickness_mm": 5.0,
+  "pinhole_diameter_mm": 1.5,
+  "pinhole_opening_angle_deg": 30.0,
+
+  "comment_parallel_collimator": "Parallel hole collimator parameters (alternative)",
+  "parallel_hole_diameter_mm": 1.5,
+  "parallel_septa_thickness_mm": 0.2,
+  "parallel_hole_length_mm": 25.0,
+
+  "comment_shielding": "Lead shielding parameters",
+  "shielding_material": "Lead",
+  "shielding_thickness_mm": 5.0,
+
+  "comment_backside": "PMT/Electronics backing",
+  "backside_thickness_mm": 50.0,
+  "backside_material": "Glass",
+
+  "comment_fov": "Field of view configurations",
+  "fov_presets": {
+    "small_animal": {
+      "fov_radius_cm": 5.0,
+      "fov_height_cm": 10.0,
+      "detector_radius_cm": 10.0,
+      "description": "10cm diameter FOV for small animal imaging"
+    },
+    "medium": {
+      "fov_radius_cm": 15.0,
+      "fov_height_cm": 25.0,
+      "detector_radius_cm": 25.0,
+      "description": "30cm diameter FOV for primate imaging"
+    },
+    "large_clinical": {
+      "fov_radius_cm": 40.0,
+      "fov_height_cm": 50.0,
+      "detector_radius_cm": 60.0,
+      "description": "80cm diameter FOV for clinical imaging"
+    }
+  },
+
+  "comment_digitizer": "Digitizer parameters",
+  "energy_resolution_fwhm": 0.07,
+  "energy_reference_keV": 140.5,
+  "energy_window_lower_keV": 126.5,
+  "energy_window_upper_keV": 154.5,
+
+  "comment_default": "Default configuration preset",
+  "default_preset": "small_animal"
+}
