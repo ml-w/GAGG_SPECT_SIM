@@ -1,0 +1,31 @@
+# Requirements for OpenGATE SPECT Examples
+# Install with: pip install -r requirements_opengate.txt
+
+# Core OpenGATE package
+# Option 1: Stable release from PyPI
+opengate
+
+# Option 2: Latest development version from GitHub (uncomment to use)
+# git+https://github.com/OpenGATE/opengate.git
+
+# Required dependencies
+numpy>=1.20.0
+scipy>=1.7.0
+click>=8.0.0
+colored>=1.4.0
+python-box>=5.0.0
+anytree>=2.8.0
+
+# Image processing
+itk>=5.2.0
+SimpleITK>=2.1.0
+
+# Optional but recommended
+matplotlib>=3.5.0  # For visualization
+uproot>=4.0.0  # For reading ROOT files
+
+# Optional: For GARF (GPU-accelerated detector response)
+# torch>=1.10.0  # Uncomment if using GARF features
+
+# Optional: For collimator physics calculations
+# xraylib>=4.1.0  # Uncomment if using advanced collimator features
