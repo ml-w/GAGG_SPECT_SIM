@@ -414,7 +414,7 @@ pip install python-box
 Material 'GAGG' not found
 ```
 
-**Solution:** Create `Materials.xml` in the same directory with GAGG definition, or ensure your GATE materials database includes GAGG.
+**Solution:** Create `GateMaterials.db` in the same directory with GAGG definition, or ensure your GATE materials database includes GAGG.
 
 ### Geometry Overlap
 
