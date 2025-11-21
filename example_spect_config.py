@@ -1,20 +1,180 @@
 #!/usr/bin/env python3
 """
-Advanced Example using OpenGATE SPECTConfig Class
+================================================================================
+OpenGATE SPECT Example - High-Level SPECTConfig API
+================================================================================
 
-This example demonstrates the high-level SPECTConfig API for comprehensive
-SPECT simulation configuration including:
-- Detector configuration (model, collimator, crystal)
-- Phantom configuration (voxelized)
-- Source configuration (activity distribution)
-- Acquisition configuration (gantry rotation, multiple heads)
-- Field of View (FOV) customization
+DESCRIPTION:
+    This example demonstrates the high-level SPECTConfig class from OpenGATE's
+    SPECT contribution module for comprehensive SPECT simulation configuration.
+    This approach is ideal for complex simulations with voxelized phantoms,
+    activity distributions, and advanced acquisition protocols.
 
-Installation:
-    pip install opengate
+FEATURES:
+    - High-level configuration through SPECTConfig class
+    - Automatic sub-configuration instantiation (detector, phantom, source, acquisition)
+    - Voxelized phantom support with HU to material conversion
+    - Activity distribution from images or numpy arrays
+    - JSON serialization for reproducibility
+    - Gantry rotation and multi-angle acquisition
+    - Support for GE NM670 and Siemens Intevo detectors
 
-Usage:
+INSTALLATION:
+    # Install OpenGATE and dependencies
+    pip install opengate numpy itk SimpleITK
+
+    # Or use latest development version
+    pip install git+https://github.com/OpenGATE/opengate.git
+
+USAGE:
+    # Run full example
     python example_spect_config.py
+
+    # The script includes three modes (change in main() function):
+    #   "full"      : Complete simulation setup (default)
+    #   "minimal"   : Simplest configuration for quick testing
+    #   "serialize" : Demonstration of JSON save/load
+
+CONFIGURATION:
+    The SPECTConfig class has auto-created sub-configurations:
+
+    1. Detector Configuration (config.detector_config):
+        model                : "Intevo" or "NM670"
+        collimator           : "lehr", "melp", "he" (Intevo) or "megp", "hegp" (NM670)
+        crystal_size         : "3/8" or "5/8" (NM670 only)
+        number_of_heads      : 1, 2, 3, etc.
+        energy_resolution    : Fractional resolution (e.g., 0.07 = 7%)
+        energy_reference     : Reference energy in keV (e.g., 140.5)
+        energy_windows       : List of {"name", "min", "max"} dictionaries
+        spatial_blur_fwhm    : Spatial blurring in cm (pixel size)
+
+    2. Phantom Configuration (config.phantom_config):
+        size                 : [nx, ny, nz] voxel dimensions
+        voxel_size           : [dx, dy, dz] in cm
+        image_path           : Path to phantom image file
+        hu_to_material_mode  : "GateMaterials" or custom
+        density_tolerance    : Tolerance in g/cm³
+        translation          : [x, y, z] position in cm
+
+    3. Source Configuration (config.source_config):
+        isotope              : Radionuclide name (e.g., "Tc99m", "Lu177")
+        total_activity       : Total activity in Bq
+        activity_distribution: Numpy array with normalized distribution
+        activity_voxel_size  : Voxel size for activity distribution
+        activity_image_path  : Path to activity image file
+
+    4. Acquisition Configuration (config.acquisition_config):
+        radius               : Gantry radius in cm
+        number_of_projections: Total number of projections
+        start_angle_deg      : Starting angle in degrees
+        angular_span         : Total rotation in degrees
+        duration             : Acquisition time in seconds
+
+    5. Main Configuration (config):
+        number_of_threads    : Number of parallel threads
+        random_seed          : Random seed for reproducibility
+        visu                 : Enable/disable visualization
+        verbose              : Enable/disable verbose output
+        output_folder        : Path for output files
+
+DETECTOR MODELS:
+    Siemens Intevo:
+        - Crystal: 53.3 × 38.7 cm, 9.5mm NaI
+        - Collimators: lehr (1.11mm), melp (2.94mm), he (4mm)
+        - Material database: spect_siemens_intevo_materials.db
+
+    GE Discovery NM670:
+        - Crystal: 54 × 40 cm
+        - Crystal thickness: 3/8" (9.525mm) or 5/8" (15.875mm)
+        - Collimators: lehr (1.5mm), megp (3mm), hegp (4mm)
+        - Material database: spect_ge_nm670_materials.db
+
+WORKFLOW:
+    1. Create SPECTConfig instance (auto-creates sub-configs)
+    2. Configure detector settings
+    3. Configure acquisition parameters
+    4. Configure phantom (FOV definition)
+    5. Configure source (activity distribution)
+    6. Set output directory
+    7. Initialize simulation from config
+    8. Run simulation
+
+OUTPUT:
+    Files are saved to: ./output_spect_config/
+
+    Generated files:
+        - Projection images (MHD/RAW format)
+        - ROOT files with hits and singles
+        - JSON configuration file (if serialized)
+
+EXAMPLE USAGE:
+    # Minimal configuration
+    config = spect_config.SPECTConfig()
+    config.detector_config.model = "Intevo"
+    config.detector_config.collimator = "lehr"
+    config.acquisition_config.radius = 30
+    config.acquisition_config.duration = 10
+    sim = config.initialize_simulation()
+    sim.run()
+
+    # Save/Load configuration
+    config.to_json("my_config.json")
+    loaded = spect_config.SPECTConfig.from_json("my_config.json")
+
+    # Custom activity distribution
+    activity = np.zeros((100, 100, 100))
+    activity[40:60, 40:60, 45:55] = 1.0
+    activity = activity / np.sum(activity)
+    config.source_config.activity_distribution = activity
+
+ADVANCED FEATURES:
+    - Free-flight variance reduction (config.free_flight_config)
+    - GARF (Gaussian Artificial Response Function) support
+    - Multi-head circular orbit acquisition
+    - Distance-dependent spatial resolution
+    - Custom material databases
+    - Pytomography integration helpers
+
+CONFIGURATION PATTERNS:
+    # High resolution imaging
+    config.detector_config.spatial_blur_fwhm = 0.2  # 2mm
+    config.phantom_config.voxel_size = [0.1, 0.1, 0.1]
+
+    # Fast acquisition
+    config.acquisition_config.number_of_projections = 30
+    config.acquisition_config.duration = 5
+    config.number_of_threads = 8
+
+    # Multi-isotope imaging
+    config.detector_config.energy_windows = [
+        {"name": "photopeak1", "min": 126.5, "max": 154.5},  # Tc-99m
+        {"name": "photopeak2", "min": 200, "max": 240}       # In-111
+    ]
+
+NOTES:
+    - SPECTConfig uses auto-created sub-configs (access via config.detector_config, etc.)
+    - Don't create new DetectorConfig() manually - use the auto-created one
+    - First run downloads Geant4 data files (~1-2 GB, one-time)
+    - Visualization disabled by default for batch processing
+    - Configuration can be serialized to JSON for reproducibility
+    - Supports both image files and numpy arrays for phantom/activity
+
+TROUBLESHOOTING:
+    - If "missing required positional argument": Use auto-created configs
+      (config.detector_config, not DetectorConfig())
+    - If simulation fails to initialize: Check that phantom and source configs
+      have compatible dimensions
+    - For memory issues: Reduce phantom size or number of projections
+
+REFERENCES:
+    - OpenGATE: https://github.com/OpenGATE/opengate
+    - SPECT Contrib: opengate/contrib/spect/
+    - spect_config.py: High-level configuration classes
+    - Documentation: http://opengate.readthedocs.io/
+
+AUTHOR: Auto-generated example for GAGG_SPECT_SIM project
+VERSION: 1.0
+================================================================================
 """
 
 import opengate as gate

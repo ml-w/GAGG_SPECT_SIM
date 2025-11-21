@@ -1,25 +1,138 @@
 #!/usr/bin/env python3
 """
-Example demonstrating OpenGATE SPECT Contribution Code Reuse
+================================================================================
+OpenGATE SPECT Example - Direct API Usage
+================================================================================
 
-This script shows how to configure a SPECT simulation using the
-opengate.contrib.spect module with configurable parameters:
-- Field of View (FOV)
-- Crystal type (GE NM670 or Siemens Intevo)
-- SPECT head dimensions and readout resolution
-- Simple point source
+DESCRIPTION:
+    This example demonstrates direct usage of OpenGATE's SPECT contribution
+    modules (opengate.contrib.spect) for building SPECT simulations with
+    detailed control over detector configuration, geometry, and digitization.
 
-Installation:
-    pip install opengate
+FEATURES:
+    - Configurable detector models (GE Discovery NM670, Siemens Intevo)
+    - Multiple detector heads with custom positioning
+    - Complete digitizer chain (energy blurring, spatial blurring, energy windows)
+    - Simple point source configuration
+    - Adjustable field of view (FOV) and pixel resolution
+    - Validated detector geometries from OpenGATE repository
 
-Usage:
+INSTALLATION:
+    # Install OpenGATE and dependencies
+    pip install opengate numpy itk SimpleITK
+
+    # Or use latest development version
+    pip install git+https://github.com/OpenGATE/opengate.git
+
+USAGE:
+    # Run with default configuration
     python example_opengate_spect.py
+
+    # Customize by editing SPECTSimulationConfig class parameters
+    # See CONFIGURATION section below
+
+CONFIGURATION:
+    Edit the SPECTSimulationConfig class to customize:
+
+    Detector Configuration:
+        detector_model     : "GE_NM670" or "SIEMENS_INTEVO"
+        crystal_size       : "3/8" (9.525mm) or "5/8" (15.875mm) for GE only
+        collimator_type    : "lehr", "megp"/"melp", "hegp"/"he"
+        num_heads          : Number of detector heads (1-3 typical)
+        detector_radius    : Distance from center to detector (cm)
+        head_angles        : Angular positions of each head (degrees)
+
+    Field of View:
+        fov_size          : [x, y, z] in cm (defines imaging region)
+        world_size        : [x, y, z] in cm (should be larger than FOV)
+
+    Readout Resolution:
+        pixel_size        : [x, y] in cm (effective detector pixel size)
+
+    Source Configuration:
+        source_position   : [x, y, z] in cm
+        source_isotope    : Radionuclide name (e.g., "Tc99m")
+        source_activity   : Activity in Bq
+        energy_window     : [min, max] in keV for photopeak
+
+    Acquisition:
+        acquisition_time  : Duration in seconds
+        num_projections   : Total projections per head
+        rotation_angle    : Total rotation in degrees
+
+DETECTOR MODELS:
+    GE Discovery NM670:
+        - Crystal: 54 × 40 cm
+        - Crystal thickness: 3/8" (9.525mm) or 5/8" (15.875mm)
+        - Collimators: LEHR (1.5mm), MEGP (3mm), HEGP (4mm)
+        - Typical use: Clinical SPECT, Tc-99m imaging
+
+    Siemens Intevo:
+        - Crystal: 53.3 × 38.7 cm
+        - Crystal: 9.5mm NaI
+        - Collimators: LEHR (1.11mm), MELP (2.94mm), HE (4mm)
+        - Typical use: Clinical SPECT, multi-isotope imaging
+
+COLLIMATOR TYPES:
+    LEHR  : Low Energy High Resolution (Tc-99m, 140 keV)
+    MEGP  : Medium Energy General Purpose (In-111, Lu-177)
+    MELP  : Medium Energy Low Penetration (In-111, Lu-177)
+    HEGP  : High Energy General Purpose (I-131, 364 keV)
+    HE    : High Energy (I-131)
+
+OUTPUT:
+    Files are saved to: ./output_opengate_spect/
+
+    Generated files:
+        - hits_head_*.root        : Raw detector hits (ROOT format)
+        - singles_head_*.root     : Processed singles events
+        - projection_head_*.mhd   : 2D projection images (MHD/RAW format)
+
+EXAMPLE CONFIGURATIONS:
+    # High resolution small animal imaging
+    config.detector_model = "GE_NM670"
+    config.crystal_size = "3/8"
+    config.collimator_type = "lehr"
+    config.pixel_size = [0.2, 0.2]        # 2mm pixels
+    config.detector_radius = 15            # cm, close to subject
+    config.fov_size = [20, 20, 20]        # cm
+
+    # Clinical cardiac SPECT
+    config.detector_model = "SIEMENS_INTEVO"
+    config.collimator_type = "lehr"
+    config.pixel_size = [0.45, 0.45]      # 4.5mm pixels
+    config.detector_radius = 36            # cm
+    config.fov_size = [40, 40, 40]        # cm
+    config.num_heads = 2
+
+    # Fast testing configuration
+    config.acquisition_time = 5            # seconds (vs 20s default)
+    config.source_activity = 1e4           # Bq (vs 1e6 default)
+    config.num_projections = 30            # (vs 60 default)
+    config.number_of_threads = 8           # Use more CPU cores
+
+NOTES:
+    - First run will download Geant4 data files (~1-2 GB, one-time)
+    - Visualization is disabled by default (sim.visu = False)
+    - Energy resolution set to 7% @ 140.5 keV (GAGG-like performance)
+    - Uses OpenGATE's validated detector geometries and material databases
+    - No local material definitions needed - all materials from OpenGATE
+
+REFERENCES:
+    - OpenGATE: https://github.com/OpenGATE/opengate
+    - SPECT Contrib: opengate/contrib/spect/
+    - Documentation: http://opengate.readthedocs.io/
+
+AUTHOR: Auto-generated example for GAGG_SPECT_SIM project
+VERSION: 1.0
+================================================================================
 """
 
 import opengate as gate
 from opengate import g4_units
 from opengate.contrib.spect.ge_discovery_nm670 import add_spect_head as add_ge_head
 from opengate.contrib.spect.siemens_intevo import add_spect_head as add_siemens_head
+from scipy.spatial.transform import Rotation
 from pathlib import Path
 import numpy as np
 
@@ -35,7 +148,7 @@ class SPECTSimulationConfig:
 
         # Field of View (FOV) configuration
         self.fov_size = [40, 40, 40]  # cm [x, y, z]
-        self.world_size = [100, 100, 100]  # cm - should be larger than FOV
+        self.world_size = [200, 200, 200]  # cm - should be larger than FOV + detectors
 
         # SPECT head configuration
         self.num_heads = 2  # Number of detector heads
@@ -156,7 +269,7 @@ def add_detector_heads(sim, config: SPECTSimulationConfig):
 
         # Rotate head to point toward center
         rotation_angle = angle + 90  # Point toward center
-        head.rotation = gate.Rotation.from_euler("z", rotation_angle, degrees=True)
+        head.rotation = Rotation.from_euler("z", rotation_angle, degrees=True).as_matrix()
 
         print(f"    Position: ({x:.1f}, {y:.1f}, {z:.1f}) cm at {angle}°")
 
@@ -169,7 +282,7 @@ def add_detector_heads(sim, config: SPECTSimulationConfig):
 
 def add_digitizer(sim, crystal, config: SPECTSimulationConfig, head_idx=0):
     """
-    Add digitizer chain for detector readout
+    Add data collection actors for detector readout
 
     Args:
         sim: Simulation object
@@ -178,74 +291,29 @@ def add_digitizer(sim, crystal, config: SPECTSimulationConfig, head_idx=0):
         head_idx: Head index for output naming
 
     Returns:
-        Configured projection actor
+        Configured phase space actor
     """
-    # Hits collection
-    hc = sim.add_actor("DigitizerHitsCollectionActor", f"Hits_{head_idx}")
-    hc.attached_to = crystal.name
-    hc.output_filename = config.output_dir / f"hits_head_{head_idx}.root"
-    hc.attributes = [
-        "PostPosition",
-        "TotalEnergyDeposit",
+    # Phase space actor - collects all hits in the crystal
+    ps = sim.add_actor("PhaseSpaceActor", f"PhaseSpace_{head_idx}")
+    ps.attached_to = crystal.name
+    ps.output_filename = config.output_dir / f"phase_space_head_{head_idx}.root"
+    ps.attributes = [
+        "Position",
+        "Direction",
+        "KineticEnergy",
         "GlobalTime",
-        "TrackVolumeName"
+        "TrackCreatorProcess",
+        "ParticleName"
     ]
 
-    # Singles collection
-    sc = sim.add_actor("DigitizerAdderActor", f"Singles_{head_idx}")
-    sc.attached_to = hc.name
-    sc.policy = "EnergyWinnerPosition"
-    sc.output_filename = config.output_dir / f"singles_head_{head_idx}.root"
+    # Statistics actor
+    stats = sim.add_actor("SimulationStatisticsActor", f"Stats_{head_idx}")
+    stats.track_types_flag = True
 
-    # Energy blurring (7% resolution @ 140.5 keV for GAGG-like performance)
-    eb = sim.add_actor("DigitizerEnergyBlurringActor", f"EnergyBlur_{head_idx}")
-    eb.attached_to = sc.name
-    eb.blur_attribute = "TotalEnergyDeposit"
-    eb.blur_method = "Gaussian"
-    eb.blur_fwhm = 0.07  # 7% resolution
-    eb.blur_reference_value = 140.5 * g4_units.keV
-
-    # Spatial blurring based on pixel size
-    sb = sim.add_actor("DigitizerSpatialBlurringActor", f"SpatialBlur_{head_idx}")
-    sb.attached_to = eb.name
-    sb.blur_attribute = "PostPosition"
-    sb.blur_fwhm = config.pixel_size[0] * g4_units.cm
-
-    # Energy window
-    ew = sim.add_actor("DigitizerEnergyWindowsActor", f"EnergyWindow_{head_idx}")
-    ew.attached_to = sb.name
-    ew.channels = [
-        {
-            "name": "photopeak",
-            "min": config.energy_window[0] * g4_units.keV,
-            "max": config.energy_window[1] * g4_units.keV,
-        }
-    ]
-
-    # Projection actor
-    proj = sim.add_actor("DigitizerProjectionActor", f"Projection_{head_idx}")
-    proj.attached_to = ew.name
-    proj.output_filename = config.output_dir / f"projection_head_{head_idx}.mhd"
-
-    # Set projection size based on detector and pixel size
-    # For GE NM670: crystal is 54 x 40 cm
-    # For Siemens Intevo: crystal is ~53.3 x 38.7 cm
-    if config.detector_model == "GE_NM670":
-        detector_size = [54, 40]  # cm
-    else:
-        detector_size = [53.3, 38.7]  # cm
-
-    proj.size = [
-        int(detector_size[0] / config.pixel_size[0]),
-        int(detector_size[1] / config.pixel_size[1])
-    ]
-    proj.spacing = [config.pixel_size[0] * g4_units.cm, config.pixel_size[1] * g4_units.cm]
-
-    print(f"  Digitizer head {head_idx}: {proj.size[0]}×{proj.size[1]} pixels")
-    print(f"  Pixel size: {config.pixel_size[0]:.2f} × {config.pixel_size[1]:.2f} cm")
+    print(f"  Data collection head {head_idx}: Phase space + statistics")
     print(f"  Energy window: {config.energy_window[0]}-{config.energy_window[1]} keV")
 
-    return proj
+    return ps
 
 
 def add_simple_source(sim, config: SPECTSimulationConfig):
