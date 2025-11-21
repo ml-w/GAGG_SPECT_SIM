@@ -88,8 +88,8 @@ def add_materials(sim):
     sim : gate.Simulation
         OpenGATE simulation object
     """
-    # Check for local materials database
-    materials_db = Path(__file__).parent / "Materials.xml"
+    # Check for local GateMaterials.db
+    materials_db = Path(__file__).parent / "GateMaterials.db"
 
     if materials_db.exists():
         if str(materials_db) not in sim.volume_manager.material_database.filenames:
@@ -328,8 +328,8 @@ def add_pinhole_collimator(sim, head_name, head_volume, params):
     collimator.material = params.collimator_material
     collimator.color = [1, 0.7, 0.7, 1]
 
-    # Pinhole aperture (cone)
-    pinhole = sim.add_volume("Cone", f"{head_name}_pinhole")
+    # Pinhole aperture (conical section)
+    pinhole = sim.add_volume("Cons", f"{head_name}_pinhole")
     pinhole.mother = colli_name
     pinhole.rmin1 = 0
     pinhole.rmax1 = params.pinhole_diameter_mm / 2.0 * mm
@@ -338,7 +338,9 @@ def add_pinhole_collimator(sim, head_name, head_volume, params):
     opening_angle_rad = np.deg2rad(params.pinhole_opening_angle_deg)
     exit_radius = params.pinhole_diameter_mm / 2.0 + thickness * np.tan(opening_angle_rad / 2)
     pinhole.rmax2 = exit_radius * mm
-    pinhole.height = thickness
+    pinhole.dz = thickness / 2.0  # Cons uses half-length
+    pinhole.sphi = 0
+    pinhole.dphi = 360 * gate.g4_units.deg
     pinhole.translation = [0, 0, 0]
     pinhole.material = "G4_AIR"
     pinhole.color = [0, 0, 1, 0.5]
